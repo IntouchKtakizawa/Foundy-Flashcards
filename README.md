@@ -66,7 +66,7 @@ The app is a static site and uses hash-based routing, so deep links work on any 
 
 **GitHub Pages** — run `npm run deploy:gh-pages`. It typechecks, tests, builds with `BASE_PATH=/<repo>/` and publishes `dist/` to the `gh-pages` branch (Pages source: *Deploy from a branch → gh-pages / root*).
 
-To deploy automatically on every push instead, add a GitHub Actions workflow that runs `npm ci`, `npm test` and `npm run build` with `BASE_PATH=/<repo>/`, then `actions/upload-pages-artifact` + `actions/deploy-pages`, and switch *Pages → Source* to **GitHub Actions**. (Pushing workflow files requires a token with the `workflow` scope.)
+To deploy automatically on every push instead, copy [`docs/github-pages-workflow.yml`](docs/github-pages-workflow.yml) to `.github/workflows/deploy.yml` and switch *Pages → Source* to **GitHub Actions**. It typechecks, tests, builds with `BASE_PATH=/<repo>/` and deploys on each push to `main`. (Pushing workflow files requires a GitHub token with the `workflow` scope.)
 
 **Cloudflare Pages** — build command `npm run build`, output directory `dist`, environment variable `NODE_VERSION=22`. `public/_headers` adds security headers.
 
