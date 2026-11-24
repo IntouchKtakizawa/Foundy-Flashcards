@@ -1,0 +1,7 @@
+# Security headers for Cloudflare Pages (ignored by GitHub Pages, which
+# relies on the Content-Security-Policy meta tag injected at build time).
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
