@@ -1,0 +1,173 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource/jetbrains-mono/400.css';
+@import 'katex/dist/katex.min.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------------
+ * Design tokens. Colours are space-separated RGB so Tailwind can apply alpha.
+ * ------------------------------------------------------------------------- */
+:root {
+  --bg: 250 250 251;
+  --surface: 255 255 255;
+  --elevated: 255 255 255;
+  --border: 228 228 234;
+  --fg: 20 20 28;
+  --muted: 96 96 112;
+  --subtle: 244 244 247;
+  --success: 22 128 72;
+  --danger: 200 38 52;
+  --warning: 176 106 0;
+
+  /* Accent (violet default) */
+  --accent: 124 58 237;
+  --accent-strong: 109 40 217;
+  --accent-fg: 255 255 255;
+  --accent-soft: 243 238 255;
+
+  color-scheme: light;
+}
+
+.dark {
+  --bg: 11 11 16;
+  --surface: 19 19 26;
+  --elevated: 27 27 36;
+  --border: 44 44 56;
+  --fg: 236 236 242;
+  --muted: 156 156 172;
+  --subtle: 30 30 40;
+  --success: 74 201 128;
+  --danger: 248 100 112;
+  --warning: 240 180 60;
+
+  --accent: 167 139 250;
+  --accent-strong: 196 181 253;
+  --accent-fg: 20 12 40;
+  --accent-soft: 42 30 74;
+
+  color-scheme: dark;
+}
+
+[data-accent='indigo'] { --accent: 79 70 229; --accent-strong: 67 56 202; --accent-soft: 238 240 255; }
+.dark[data-accent='indigo'] { --accent: 129 140 248; --accent-strong: 165 180 252; --accent-soft: 32 34 74; }
+[data-accent='blue'] { --accent: 37 99 235; --accent-strong: 29 78 216; --accent-soft: 236 243 255; }
+.dark[data-accent='blue'] { --accent: 96 165 250; --accent-strong: 147 197 253; --accent-soft: 22 38 70; }
+[data-accent='teal'] { --accent: 13 128 120; --accent-strong: 15 108 101; --accent-soft: 230 247 245; }
+.dark[data-accent='teal'] { --accent: 45 212 191; --accent-strong: 94 234 212; --accent-fg: 4 30 28; --accent-soft: 16 48 46; }
+[data-accent='rose'] { --accent: 205 33 84; --accent-strong: 180 24 70; --accent-soft: 255 239 243; }
+.dark[data-accent='rose'] { --accent: 251 113 133; --accent-strong: 253 164 175; --accent-fg: 40 6 14; --accent-soft: 70 22 34; }
+[data-accent='amber'] { --accent: 180 83 9; --accent-strong: 154 52 18; --accent-soft: 255 246 230; }
+.dark[data-accent='amber'] { --accent: 251 191 36; --accent-strong: 252 211 77; --accent-fg: 36 22 0; --accent-soft: 58 40 10; }
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-bg text-fg font-sans antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+  ::selection {
+    background: rgb(var(--accent) / 0.25);
+  }
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  h1, h2, h3 {
+    @apply tracking-tight;
+  }
+}
+
+/* Reduced motion: honour the OS setting unless the user opted in to full motion,
+ * and always when the user chose "reduced" in Settings. */
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion='full']) *,
+  html:not([data-motion='full']) *::before,
+  html:not([data-motion='full']) *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+html[data-motion='reduced'] *,
+html[data-motion='reduced'] *::before,
+html[data-motion='reduced'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+@layer components {
+  .panel {
+    @apply rounded-xl border border-border bg-surface shadow-card;
+  }
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-fg;
+  }
+  .field-hint {
+    @apply mt-1.5 text-xs text-muted;
+  }
+  .input-base {
+    @apply w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg placeholder:text-muted/70
+      transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25
+      disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .kbd {
+    @apply inline-flex min-w-[1.4rem] items-center justify-center rounded border border-border bg-subtle px-1.5 py-0.5 font-mono text-[11px] font-medium text-muted;
+  }
+  .skeleton {
+    @apply animate-pulse rounded-md bg-subtle;
+  }
+}
+
+/* Rendered Markdown inside cards */
+.prose-card {
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+.prose-card > * + * { margin-top: 0.6em; }
+.prose-card ul { list-style: disc; padding-left: 1.4em; }
+.prose-card ol { list-style: decimal; padding-left: 1.4em; }
+.prose-card a { color: rgb(var(--accent)); text-decoration: underline; text-underline-offset: 2px; }
+.prose-card code {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.88em;
+  background: rgb(var(--subtle));
+  border: 1px solid rgb(var(--border));
+  border-radius: 5px;
+  padding: 0.08em 0.35em;
+}
+.prose-card pre {
+  background: rgb(var(--subtle));
+  border: 1px solid rgb(var(--border));
+  border-radius: 10px;
+  padding: 0.8em 1em;
+  overflow-x: auto;
+  text-align: left;
+}
+.prose-card pre code { background: none; border: 0; padding: 0; }
+.prose-card blockquote { border-left: 3px solid rgb(var(--border)); padding-left: 0.9em; color: rgb(var(--muted)); }
+.prose-card h1, .prose-card h2, .prose-card h3 { font-weight: 600; }
+.prose-card table { border-collapse: collapse; margin-inline: auto; }
+.prose-card th, .prose-card td { border: 1px solid rgb(var(--border)); padding: 0.3em 0.6em; }
+.prose-card img { max-height: 16rem; margin-inline: auto; border-radius: 8px; }
+.prose-card .katex-display { margin: 0.6em 0; overflow-x: auto; overflow-y: hidden; }
+
+/* 3D flip card */
+.flip-scene { perspective: 1600px; }
+.flip-card { transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.flip-card.is-flipped { transform: rotateY(180deg); }
+.flip-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.flip-back { transform: rotateY(180deg); }
+
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+/* Recharts focus outline cleanup */
+.recharts-wrapper *:focus { outline: none; }
