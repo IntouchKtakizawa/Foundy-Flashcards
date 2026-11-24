@@ -46,7 +46,7 @@ export async function createSampleDeck(): Promise<string> {
   const deck = await createDeck({
     name: 'Welcome to Foundy',
     description: 'A short starter deck that shows Markdown, maths and QuickImport. Edit or delete it any time.',
-    color: 'violet',
+    color: 'orange',
     icon: 'graduation-cap',
     tags: ['Getting started'],
   });

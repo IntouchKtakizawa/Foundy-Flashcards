@@ -8,7 +8,7 @@ import { cn, formatInterval } from '@/lib/utils';
 import { usePreferences } from '@/state/preferences';
 import { useToast } from '@/state/toast';
 import type { Flashcard, Grade } from '@/types';
-import { CardFace, Explanation, HintBox, ModeProgress } from './CardFace';
+import { CardFace, Explanation, FlipPanel, HintBox, ModeProgress } from './CardFace';
 import { useStudyKeys } from './useStudyKeys';
 import type { ModeProps } from './types';
 
@@ -129,24 +129,15 @@ export function SrsMode({ cards, sessionId, onComplete }: ModeProps) {
         </div>
       </div>
 
-      <div className="panel flex min-h-[280px] flex-col items-center justify-center px-5 py-8 sm:px-10">
-        <CardFace label="Question" text={card.question} image={card.questionImage} />
-        {showHint && card.hint && <HintBox text={card.hint} />}
-        {revealed && (
-          <div className="mt-6 w-full border-t border-border pt-6" aria-live="polite">
-            <CardFace label="Answer" text={card.answer} image={card.answerImage}>
-              <Explanation text={card.explanation} />
-            </CardFace>
-          </div>
-        )}
-      </div>
+      <FlipPanel action={revealed ? 'Tap to show question' : 'Tap to show answer'} onFlip={() => setRevealed((value) => !value)}>
+        <CardFace label={revealed ? 'Answer' : 'Question'} text={revealed ? card.answer : card.question} image={revealed ? card.answerImage : card.questionImage}>
+          {revealed && <Explanation text={card.explanation} />}
+        </CardFace>
+      </FlipPanel>
+      {showHint && card.hint && <HintBox text={card.hint} />}
 
       <div className="mt-4">
-        {!revealed ? (
-          <Button size="lg" className="w-full" onClick={() => setRevealed(true)}>
-            Show answer
-          </Button>
-        ) : (
+        {revealed && (
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4" role="group" aria-label="How well did you remember?">
             {GRADES.map((g) => (
               <button

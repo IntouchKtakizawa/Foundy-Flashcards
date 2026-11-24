@@ -147,7 +147,7 @@ export interface StudySession {
 }
 
 export type ThemePreference = 'light' | 'dark' | 'system';
-export type AccentColor = 'violet' | 'indigo' | 'blue' | 'teal' | 'rose' | 'amber';
+export type AccentColor = 'foundy' | 'violet' | 'indigo' | 'blue' | 'teal' | 'rose' | 'amber';
 export type CardOrder = 'original' | 'shuffled' | 'difficult-first';
 export type AnswerSensitivity = 'strict' | 'normal' | 'lenient';
 export type MotionPreference = 'system' | 'full' | 'reduced';
@@ -171,7 +171,7 @@ export interface Preferences {
 
 export const DEFAULT_PREFERENCES: Preferences = {
   theme: 'system',
-  accent: 'violet',
+  accent: 'foundy',
   defaultStudyMode: 'srs',
   dailyTarget: 30,
   cardOrder: 'original',

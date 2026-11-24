@@ -73,7 +73,7 @@ describe('persistent storage', () => {
 
   it('stores preferences', async () => {
     await savePreferences({ theme: 'dark', dailyTarget: 50 });
-    expect(await getPreferences()).toMatchObject({ theme: 'dark', dailyTarget: 50, accent: 'violet' });
+    expect(await getPreferences()).toMatchObject({ theme: 'dark', dailyTarget: 50, accent: 'foundy' });
   });
 
   it('resets study statistics but keeps cards', async () => {

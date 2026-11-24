@@ -15,6 +15,7 @@ import { ConfirmDialog, Dialog } from '@/components/ui/Dialog';
 import { Kbd, PageHeader, Segmented, Switch } from '@/components/ui/misc';
 
 const ACCENTS: Array<{ value: AccentColor; label: string; swatch: string }> = [
+  { value: 'foundy', label: 'DevFoundy', swatch: '#3339a9' },
   { value: 'violet', label: 'Violet', swatch: '#7c3aed' },
   { value: 'indigo', label: 'Indigo', swatch: '#4f46e5' },
   { value: 'blue', label: 'Blue', swatch: '#2563eb' },

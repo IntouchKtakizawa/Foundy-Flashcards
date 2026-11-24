@@ -1,18 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeftRight, Check, ChevronLeft, ChevronRight, Flag, Lightbulb, RotateCcw, Shuffle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Kbd } from '@/components/ui/misc';
 import { logReview, setCardFlag } from '@/db/repo';
 import { usePreferences } from '@/state/preferences';
-import { cn, shuffle } from '@/lib/utils';
+import { shuffle } from '@/lib/utils';
 import type { Flashcard } from '@/types';
-import { CardFace, Explanation, HintBox, ModeProgress } from './CardFace';
+import { CardFace, Explanation, FlipPanel, HintBox, ModeProgress } from './CardFace';
 import { useStudyKeys } from './useStudyKeys';
 import type { ModeProps } from './types';
 
 export function ClassicMode({ cards, sessionId, onComplete }: ModeProps) {
-  const { reducedMotion, prefs } = usePreferences();
+  const { prefs } = usePreferences();
   const [order, setOrder] = useState<Flashcard[]>(cards);
   const [shuffled, setShuffled] = useState(false);
   const [reversed, setReversed] = useState(false);
@@ -91,15 +90,7 @@ export function ClassicMode({ cards, sessionId, onComplete }: ModeProps) {
   const back = reversed ? { label: 'Question', text: card.question, image: card.questionImage } : { label: 'Answer', text: card.answer, image: card.answerImage };
 
   const assessed = Object.keys(assess).length;
-  const faceClass = 'flex min-h-[260px] flex-col items-center justify-center px-5 py-8 sm:min-h-[320px] sm:px-10';
-  const cardLabel = flipped ? `${back.label} side. Activate to show the ${front.label.toLowerCase()}.` : `${front.label} side. Activate to reveal the ${back.label.toLowerCase()}.`;
-
-  const onCardKey = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      flip();
-    }
-  };
+  const face = flipped ? back : front;
 
   return (
     <div>
@@ -125,34 +116,11 @@ export function ClassicMode({ cards, sessionId, onComplete }: ModeProps) {
         </Button>
       </div>
 
-      {reducedMotion ? (
-        <div role="button" tabIndex={0} aria-label={cardLabel} onClick={flip} onKeyDown={onCardKey} className="panel cursor-pointer select-none">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div key={`${card.id}-${flipped}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.12 }} className={faceClass}>
-              {flipped ? (
-                <CardFace label={back.label} text={back.text} image={back.image}>
-                  <Explanation text={card.explanation} />
-                </CardFace>
-              ) : (
-                <CardFace label={front.label} text={front.text} image={front.image} />
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      ) : (
-        <div className="flip-scene">
-          <div role="button" tabIndex={0} aria-label={cardLabel} onClick={flip} onKeyDown={onCardKey} className={cn('flip-card grid cursor-pointer select-none rounded-xl', flipped && 'is-flipped')}>
-            <div className={cn('flip-face panel [grid-area:1/1]', faceClass)} aria-hidden={flipped}>
-              <CardFace label={front.label} text={front.text} image={front.image} />
-            </div>
-            <div className={cn('flip-face flip-back panel [grid-area:1/1]', faceClass)} aria-hidden={!flipped}>
-              <CardFace label={back.label} text={back.text} image={back.image}>
-                <Explanation text={card.explanation} />
-              </CardFace>
-            </div>
-          </div>
-        </div>
-      )}
+      <FlipPanel action={`Tap to show ${(flipped ? front : back).label.toLowerCase()}`} onFlip={flip}>
+        <CardFace label={face.label} text={face.text} image={face.image}>
+          {flipped && <Explanation text={card.explanation} />}
+        </CardFace>
+      </FlipPanel>
 
       {showHint && card.hint && <HintBox text={card.hint} />}
 
@@ -171,7 +139,7 @@ export function ClassicMode({ cards, sessionId, onComplete }: ModeProps) {
           )}
         </div>
 
-        {flipped ? (
+        {flipped && (
           <div className="flex flex-1 flex-wrap justify-end gap-2" aria-label="How did you do?">
             <Button variant="outline" icon={<RotateCcw className="h-4 w-4" />} onClick={() => rate(false)} className="min-w-[140px]">
               Still learning
@@ -180,10 +148,6 @@ export function ClassicMode({ cards, sessionId, onComplete }: ModeProps) {
               Got it
             </Button>
           </div>
-        ) : (
-          <Button onClick={flip} className="min-w-[160px]">
-            Show {back.label.toLowerCase()}
-          </Button>
         )}
       </div>
 

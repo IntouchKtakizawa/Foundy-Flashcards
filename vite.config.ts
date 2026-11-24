@@ -45,7 +45,7 @@ export default defineConfig({
         name: 'Foundy Flashcards',
         short_name: 'Foundy',
         description: 'Learn smarter. Remember longer. Free, privacy-first flashcards by DevFoundy.',
-        theme_color: '#7c3aed',
+        theme_color: '#ec6741',
         background_color: '#0b0b10',
         display: 'standalone',
         start_url: '.',

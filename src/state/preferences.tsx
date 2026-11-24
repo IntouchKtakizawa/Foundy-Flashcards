@@ -56,15 +56,15 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     const root = document.documentElement;
     const dark = prefs.theme === 'dark' || (prefs.theme === 'system' && sysDark);
     root.classList.toggle('dark', dark);
-    if (prefs.accent === 'violet') delete root.dataset.accent;
+    if (prefs.accent === 'foundy') delete root.dataset.accent;
     else root.dataset.accent = prefs.accent;
     if (prefs.motion === 'system') delete root.dataset.motion;
     else root.dataset.motion = prefs.motion;
     const meta = document.querySelector('meta[name="theme-color"]');
-    meta?.setAttribute('content', dark ? '#0b0b10' : '#fafafb');
+    meta?.setAttribute('content', dark ? '#0b0b10' : '#faf8f1');
     try {
       localStorage.setItem('foundy:theme', prefs.theme);
-      localStorage.setItem('foundy:accent', prefs.accent === 'violet' ? '' : prefs.accent);
+      localStorage.setItem('foundy:accent', prefs.accent === 'foundy' ? '' : prefs.accent);
       localStorage.setItem('foundy:motion', prefs.motion);
     } catch {
       /* storage unavailable */

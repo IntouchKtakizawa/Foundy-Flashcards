@@ -13,6 +13,18 @@ export function CardFace({ label, text, image, children, className }: { label: s
   );
 }
 
+/** The button covers the panel, while links in card content stay interactive. */
+export function FlipPanel({ children, action, onFlip, className }: { children: ReactNode; action: string; onFlip: () => void; className?: string }) {
+  return (
+    <div className={cn('panel relative isolate flex min-h-[260px] flex-col items-center justify-center gap-4 px-5 py-8 text-center sm:px-10 [&_a]:relative [&_a]:z-10', className)}>
+      <div aria-live="polite" className="w-full">{children}</div>
+      <button type="button" onClick={onFlip} className="text-xs font-medium text-accent after:absolute after:inset-0 after:rounded-xl focus-visible:after:ring-2 focus-visible:after:ring-accent">
+        {action}
+      </button>
+    </div>
+  );
+}
+
 export function Explanation({ text }: { text: string }) {
   if (!text.trim()) return null;
   return (

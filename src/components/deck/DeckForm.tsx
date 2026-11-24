@@ -21,7 +21,7 @@ export function deckToValues(d?: Deck | null): DeckFormValues {
   return {
     name: d?.name ?? '',
     description: d?.description ?? '',
-    color: d?.color ?? 'violet',
+    color: d?.color ?? 'orange',
     icon: d?.icon ?? 'book',
     folderId: d?.folderId ?? null,
     tags: d?.tags ?? [],

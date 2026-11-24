@@ -35,7 +35,7 @@ export async function createDeck(input: DeckInput): Promise<Deck> {
     id: uid(),
     name: input.name.trim() || 'Untitled deck',
     description: input.description?.trim() ?? '',
-    color: input.color ?? 'violet',
+    color: input.color ?? 'orange',
     icon: input.icon ?? 'book',
     folderId: input.folderId ?? null,
     tags: input.tags ?? [],

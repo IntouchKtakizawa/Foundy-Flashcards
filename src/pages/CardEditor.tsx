@@ -10,9 +10,10 @@ import { cn, parseTags } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Field';
 import { ConfirmDialog } from '@/components/ui/Dialog';
-import { EmptyState, Kbd, Segmented, Skeleton } from '@/components/ui/misc';
+import { EmptyState, Segmented, Skeleton } from '@/components/ui/misc';
 import { MarkdownView } from '@/components/card/MarkdownView';
 import { ImageField } from '@/components/card/ImageField';
+import { FlipPanel } from '@/components/study/CardFace';
 import { DeckGlyph } from '@/components/deck/deckVisuals';
 
 interface FormState {
@@ -224,6 +225,7 @@ export function CardEditorPage() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
         <form
           className="panel space-y-4 p-5"
+          noValidate
           onSubmit={(e) => {
             e.preventDefault();
             void save(!isEdit);
@@ -235,7 +237,7 @@ export function CardEditorPage() {
             id="card-question"
             label="Question"
             required
-            rows={4}
+            rows={3}
             autoFocus
             value={form.question}
             error={errors.question}
@@ -247,55 +249,42 @@ export function CardEditorPage() {
             id="card-answer"
             label="Answer"
             required
-            rows={4}
+            rows={3}
             value={form.answer}
             error={errors.answer}
             placeholder="The mitochondrion."
             onFocus={() => setSide('answer')}
             onChange={(e) => set('answer', e.target.value)}
           />
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Input label="Hint" value={form.hint} placeholder="Optional nudge" onChange={(e) => set('hint', e.target.value)} />
-            <Input label="Tags" value={form.tags} placeholder="Cells, Organelles" hint="Comma separated" onChange={(e) => set('tags', e.target.value)} />
+          <div className="flex flex-wrap items-center gap-2">
+            <Button type="submit" icon={isEdit ? <Save className="h-4 w-4" /> : <Check className="h-4 w-4" />} loading={saving}>
+              {isEdit ? 'Save' : 'Save & add another'}
+            </Button>
+            <Button variant="outline" onClick={() => save(isEdit)} loading={saving}>
+              {isEdit ? 'Save & new card' : 'Save & close'}
+            </Button>
           </div>
-          <Textarea label="Explanation" rows={3} value={form.explanation} placeholder="Shown after the answer is revealed (optional)" onFocus={() => setSide('answer')} onChange={(e) => set('explanation', e.target.value)} />
-          <Input
-            label="Accepted alternative answers"
-            value={form.aliases}
-            placeholder="mitochondria | the mitochondria"
-            hint="Used by Written mode. Separate alternatives with |"
-            onChange={(e) => set('aliases', e.target.value)}
-          />
-          <div className="grid gap-4 sm:grid-cols-2">
-            <ImageField label="Question image" value={form.questionImage} onChange={(v) => set('questionImage', v)} />
-            <ImageField label="Answer image" value={form.answerImage} onChange={(v) => set('answerImage', v)} />
-          </div>
-          <div className="flex flex-col-reverse gap-2 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="hidden text-xs text-muted sm:block">
-              <Kbd>Ctrl</Kbd> + <Kbd>Enter</Kbd> {isEdit ? 'save' : 'save & add another'} · <Kbd>Ctrl</Kbd> + <Kbd>P</Kbd> flip preview
-            </p>
-            <div className="flex flex-col gap-2 sm:flex-row">
-              {isEdit ? (
-                <>
-                  <Button variant="outline" onClick={() => save(true)} loading={saving}>
-                    Save & new card
-                  </Button>
-                  <Button type="submit" icon={<Save className="h-4 w-4" />} loading={saving}>
-                    Save
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button variant="outline" onClick={() => save(false)} loading={saving}>
-                    Save & close
-                  </Button>
-                  <Button type="submit" icon={<Check className="h-4 w-4" />} loading={saving}>
-                    Save & add another
-                  </Button>
-                </>
-              )}
+          <details className="border-t border-border pt-3">
+            <summary className="cursor-pointer text-sm font-medium">More options</summary>
+            <div className="mt-4 space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Input label="Hint" value={form.hint} placeholder="Optional nudge" onChange={(e) => set('hint', e.target.value)} />
+                <Input label="Tags" value={form.tags} placeholder="Cells, Organelles" hint="Comma separated" onChange={(e) => set('tags', e.target.value)} />
+              </div>
+              <Textarea label="Explanation" rows={3} value={form.explanation} placeholder="Shown after the answer is revealed (optional)" onFocus={() => setSide('answer')} onChange={(e) => set('explanation', e.target.value)} />
+              <Input
+                label="Accepted alternative answers"
+                value={form.aliases}
+                placeholder="mitochondria | the mitochondria"
+                hint="Used by Written mode. Separate alternatives with |"
+                onChange={(e) => set('aliases', e.target.value)}
+              />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <ImageField label="Question image" value={form.questionImage} onChange={(v) => set('questionImage', v)} />
+                <ImageField label="Answer image" value={form.answerImage} onChange={(v) => set('answerImage', v)} />
+              </div>
             </div>
-          </div>
+          </details>
         </form>
 
         <div className="space-y-4 lg:sticky lg:top-6 lg:self-start">
@@ -314,7 +303,7 @@ export function CardEditorPage() {
               ]}
             />
           </div>
-          <div className={cn('panel flex min-h-[260px] flex-col items-center justify-center p-6 text-center shadow-pop', side === 'answer' && 'border-accent/40')} aria-live="polite">
+          <FlipPanel action={side === 'question' ? 'Tap to show answer' : 'Tap to show question'} onFlip={() => setSide(side === 'question' ? 'answer' : 'question')} className={cn(side === 'answer' && 'border-accent/40')}>
             <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-muted">{side}</p>
             {preview.text || preview.image ? (
               <MarkdownView source={preview.text} image={preview.image} className="w-full text-base sm:text-lg" />
@@ -327,7 +316,7 @@ export function CardEditorPage() {
                 <MarkdownView source={form.explanation} />
               </div>
             )}
-          </div>
+          </FlipPanel>
           {added.length > 0 && (
             <div className="panel p-4">
               <h2 className="mb-2 text-sm font-semibold">Added this session ({added.length})</h2>

@@ -24,7 +24,7 @@ Foundy Flashcards is a free, privacy-first flashcard app by **DevFoundy**. It he
 - **Statistics** — daily/weekly/monthly activity, accuracy trend, streaks, total study time, mastery distribution, difficult cards, deck performance, upcoming workload and a revision calendar. Every number comes from your own study history.
 - **Backups** — export a deck (JSON/CSV/TXT), all decks, or a complete backup including study history, scheduling, folders and preferences. Restores are validated first and can **merge** or **replace**.
 - **Offline PWA** — installable, works fully offline (studying, creating and importing). Updates never touch your data.
-- **Accessible & responsive** — keyboard navigation, visible focus, screen-reader labels, accessible dialogs, reduced-motion support, colour-independent feedback, light/dark/system themes and six accent colours.
+- **Accessible & responsive** — keyboard navigation, visible focus, screen-reader labels, accessible dialogs, reduced-motion support, colour-independent feedback, light/dark/system themes and seven accent colours.
 
 ## Technology
 

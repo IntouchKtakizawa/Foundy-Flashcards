@@ -4,8 +4,8 @@
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { deflateSync } from 'node:zlib';
 
-const PURPLE = [124, 58, 237];
-const PURPLE_DARK = [91, 33, 182];
+const CORAL = [236, 103, 65];
+const CORAL_DARK = [187, 68, 42];
 
 function crc32(buf) {
   let c, crc = 0xffffffff;
@@ -64,10 +64,10 @@ function render(size, { maskable = false } = {}) {
         let c = null, ca = 0;
         if (inRoundRect(px, py, bg)) {
           const t = py; // subtle vertical shade
-          c = PURPLE.map((v, i) => Math.round(v * (1 - t * 0.25) + PURPLE_DARK[i] * t * 0.25)); ca = 255;
+          c = CORAL.map((v, i) => Math.round(v * (1 - t * 0.25) + CORAL_DARK[i] * t * 0.25)); ca = 255;
           if (inRoundRect(px, py, back)) c = c.map((v) => Math.round(v * 0.45 + 255 * 0.55));
           if (inRoundRect(px, py, front)) c = [255, 255, 255];
-          if (inRoundRect(px, py, line1) || inRoundRect(px, py, line2)) c = PURPLE;
+          if (inRoundRect(px, py, line1) || inRoundRect(px, py, line2)) c = CORAL;
         }
         if (c) { r += c[0]; g += c[1]; b += c[2]; a += ca; }
       }
@@ -87,11 +87,11 @@ writeFileSync('public/icons/icon-512.png', render(512));
 writeFileSync('public/icons/icon-512-maskable.png', render(512, { maskable: true }));
 writeFileSync('public/icons/apple-touch-icon.png', render(180, { maskable: true }));
 writeFileSync('public/favicon.svg', `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#7c3aed"/>
-  <rect x="19" y="13" width="32" height="23" rx="4" fill="#c4b0f7" transform="rotate(-10 35 24.5)"/>
+  <rect width="64" height="64" rx="14" fill="#ec6741"/>
+  <rect x="19" y="13" width="32" height="23" rx="4" fill="#f7b39f" transform="rotate(-10 35 24.5)"/>
   <rect x="13" y="23" width="33" height="24" rx="4" fill="#fff" transform="rotate(3.5 29.5 35)"/>
-  <rect x="17" y="30.5" width="17" height="2.6" rx="1.3" fill="#7c3aed" transform="rotate(3.5 25.5 31.8)"/>
-  <rect x="17" y="36" width="13" height="2.6" rx="1.3" fill="#7c3aed" transform="rotate(3.5 23.5 37.3)"/>
+  <rect x="17" y="30.5" width="17" height="2.6" rx="1.3" fill="#ec6741" transform="rotate(3.5 25.5 31.8)"/>
+  <rect x="17" y="36" width="13" height="2.6" rx="1.3" fill="#ec6741" transform="rotate(3.5 23.5 37.3)"/>
 </svg>
 `);
 console.log('icons written');
